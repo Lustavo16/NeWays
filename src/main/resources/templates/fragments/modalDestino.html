@@ -1,0 +1,38 @@
+<div th:fragment="modalDestino">
+
+    <div class="modal fade" id="modalDestino" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Destino</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <form id="formDestino">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label>Nome</label>
+                            <input type="text" id="nomeDestino" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Endereço</label>
+                            <input type="text" id="enderecoDestino" class="form-control">
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" id="btnSalvarDestino" class="btn btn-primary">Salvar</button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

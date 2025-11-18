@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/estilos.css" media="screen">
+</head>
+<body>
+<div class="form-group">
+    <div class="container">
+        <h1 th:text="${mensagem}">Texto Padrão</h1>
+        <br>
+        <div align="center">
+            <a th:href="@{/novoRoteiro}" class="btn btn-primary">
+                Cadastrar Novo Roteiro
+            </a>
+        </div>
+        <br>
+        <div align="center">
+            <a th:href="@{/novoRoteiro}" class="btn btn-primary">
+                Buscar Roteiros
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
