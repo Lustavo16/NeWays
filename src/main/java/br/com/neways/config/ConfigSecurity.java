@@ -17,7 +17,10 @@ public class ConfigSecurity {
                 )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
-                .logout(logout -> logout.disable());
+                .logout(logout -> logout.disable())
+                .headers(header -> header
+                        .frameOptions(frame -> frame.disable())
+                );
 
         return http.build();
     }

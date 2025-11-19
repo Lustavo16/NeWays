@@ -21,8 +21,48 @@ public class Roteiro {
 
     @ManyToOne
     @JoinColumn(name = "criador_id")
-    Usuario criador;
+    private Usuario criador;
 
     @OneToMany(mappedBy = "roteiro", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Destino> destinos = new ArrayList<>();
+    private List<Destino> destinos = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Usuario getCriador() {
+        return criador;
+    }
+
+    public void setCriador(Usuario criador) {
+        this.criador = criador;
+    }
+
+    public List<Destino> getDestinos() {
+        return destinos;
+    }
+
+    public void setDestinos(List<Destino> destinos) {
+        this.destinos = destinos;
+    }
 }
