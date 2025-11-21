@@ -3,6 +3,7 @@ package br.com.neways.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Getter
@@ -20,7 +21,12 @@ public class Destino {
 
     private String observacao;
 
+    @Lob
+    @Column(length = 10000000)
     private byte[] foto;
+
+    @Transient
+    private MultipartFile arquivoDestino;
 
     @ManyToOne
     @JoinColumn(name = "roteiro_id")
@@ -80,5 +86,13 @@ public class Destino {
 
     public void setRoteiro(Roteiro roteiro) {
         this.roteiro = roteiro;
+    }
+
+    public MultipartFile getArquivoDestino() {
+        return arquivoDestino;
+    }
+
+    public void setArquivoDestino(MultipartFile arquivoDestino) {
+        this.arquivoDestino = arquivoDestino;
     }
 }

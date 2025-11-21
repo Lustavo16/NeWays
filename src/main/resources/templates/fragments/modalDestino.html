@@ -1,8 +1,8 @@
 <div th:fragment="modalDestino">
 
     <div class="modal fade" id="modalDestino" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" >
 
                 <div class="modal-header">
                     <h5 class="modal-title">Adicionar Destino</h5>
@@ -12,14 +12,26 @@
                 <form id="formDestino">
                     <div class="modal-body">
 
+                        <input type="hidden" id="editId">
+
                         <div class="mb-3">
-                            <label>Nome</label>
+                            <label>Nome:</label>
                             <input type="text" id="nomeDestino" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label>Endereço</label>
-                            <input type="text" id="enderecoDestino" class="form-control">
+                            <label>Localização:</label>
+                            <input type="text" id="localizacaoDestino" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Descrição:</label>
+                            <textarea type="text" id="descricaoDestino" class="form-control"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Observação:</label>
+                            <input type="text" id="observacaoDestino" class="form-control">
                         </div>
 
                     </div>

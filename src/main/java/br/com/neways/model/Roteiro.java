@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Getter
@@ -19,6 +20,13 @@ public class Roteiro {
 
     private String descricao;
 
+    @Lob
+    @Column(name = "capa", length = 10000000)
+    private byte[] capa;
+
+    @Transient
+    private MultipartFile arquivoCapa;
+
     @ManyToOne
     @JoinColumn(name = "criador_id")
     private Usuario criador;
@@ -26,6 +34,8 @@ public class Roteiro {
     @OneToMany(mappedBy = "roteiro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Destino> destinos = new ArrayList<>();
 
+
+    //Getters e Setters
     public Long getId() {
         return id;
     }
@@ -50,6 +60,8 @@ public class Roteiro {
         this.descricao = descricao;
     }
 
+    @ManyToOne
+    @JoinColumn(name="criador_id")
     public Usuario getCriador() {
         return criador;
     }
@@ -64,5 +76,21 @@ public class Roteiro {
 
     public void setDestinos(List<Destino> destinos) {
         this.destinos = destinos;
+    }
+
+    public byte[] getCapa() {
+        return capa;
+    }
+
+    public void setCapa(byte[] capa) {
+        this.capa = capa;
+    }
+
+    public MultipartFile getArquivoCapa() {
+        return arquivoCapa;
+    }
+
+    public void setArquivoCapa(MultipartFile arquivoCapa) {
+        this.arquivoCapa = arquivoCapa;
     }
 }
