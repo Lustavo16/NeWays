@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    @GetMapping("/")
+    @GetMapping("/menu")
     public String Menu(Model model) {
         model.addAttribute("mensagem", "Bem-Vindo ao Neways");
         return "menu";

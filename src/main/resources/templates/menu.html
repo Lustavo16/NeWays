@@ -1,27 +1,41 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" type="text/css" href="/estilos.css" media="screen">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neways - Home</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div class="form-group">
-    <div class="container">
-        <h1 th:text="${mensagem}">Texto Padrão</h1>
-        <br>
-        <div align="center">
-            <a th:href="@{/novoRoteiro}" class="btn btn-primary">
+
+<div th:replace="~{fragments/header :: nav}"></div>
+
+<div class="container mt-5">
+
+    <div class="white-box text-center">
+
+        <h1 class="mb-4">Bem-vindo ao NeWays</h1>
+
+        <p class="text-muted mb-5">Abra o caminho para aqueles que virão.</p>
+
+        <div class="d-grid gap-3 d-sm-flex justify-content-center">
+
+            <a th:href="@{/novoRoteiro}" class="btn btn-primary btn-lg px-4 gap-3">
                 Cadastrar Novo Roteiro
             </a>
-        </div>
-        <br>
-        <div align="center">
-            <a th:href="@{/novoRoteiro}" class="btn btn-primary">
+
+            <a th:href="@{/roteiro}" class="btn btn-outline-primary btn-lg px-4">
                 Buscar Roteiros
             </a>
+
         </div>
+
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

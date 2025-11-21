@@ -1,0 +1,85 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Fundo e fonte geral */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #333;
+    /* CORREÇÃO CRÍTICA: Removido display: flex que quebrava o layout com o menu */
+    display: block;
+    min-height: 100vh;
+}
+
+/* Garante margem apenas no conteúdo, não na tela toda */
+html, body {
+    overflow-x: hidden; /* Evita rolagem horizontal indesejada */
+}
+
+/* Ajuste do Header para ficar fixo corretamente */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000; /* Garante que o menu fique acima de tudo */
+    background-color: white; /* Evita transparência ao rolar */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Container centralizado */
+/* CORREÇÃO CRÍTICA: Usamos max-width para ser responsivo */
+.container-custom {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-width: 1000px; /* Limite máximo */
+    width: 100%;       /* Ocupa o que der */
+    margin: 30px auto; /* Centraliza na tela */
+}
+
+/* Se você estiver usando a classe .container do Bootstrap,
+   use esta classe auxiliar .white-box dentro dela */
+.white-box {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Título */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+    color: #2c3e50;
+}
+
+/* Grupos do formulário */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Botões Customizados
+   (Usamos classes especificas para não estragar os botões do Bootstrap) */
+.btn-custom {
+    background: #3498db;
+    color: #fff !important;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.3s;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-custom:hover {
+    background: #2980b9;
+    color: white;
+}

@@ -30,8 +30,11 @@ html, body {
 }
 
 header {
-    position: sticky; /* em vez de fixed */
+    position: sticky;
     top: 0;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* Container centralizado */
@@ -43,8 +46,18 @@ header {
     width: 1000px;
 }
 
+.container-custom {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-width: 1000px;
+    width: 100%;
+    margin: 30px auto;
+}
+
 /* Título */
-.container h1 {
+.h1 {
     text-align: center;
     margin-bottom: 20px;
     font-size: 22px;
@@ -54,95 +67,6 @@ header {
 /* Grupos do formulário */
 .form-group {
     margin-bottom: 15px;
-}
-
-/* Inputs datetime-local */
-input[type="datetime-local"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    background-color: #f9f9f9;
-}
-
-/* Inputs focados */
-input[type="datetime-local"]:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-/* Inputs datetime-local */
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    background-color: #f9f9f9;
-    height: 150px;
-    resize: none;
-}
-
-/* Inputs focados */
-textarea:focus {
-    border-color: #3498db;
-    outline: none;
-}
-
-/* Inputs readonly */
-input[readonly] {
-    background-color: #e9ecef; /* cinza claro */
-    cursor: not-allowed;
-}
-
-/* Labels */
-label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #fff;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-select:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
-}
-
-/* Opcional: estilo das opções */
-select option {
-    padding: 10px;
-    font-size: 14px;
-}
-
-/* Inputs */
-input[type="text"],
-input[type="date"],
-input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-}
-
-input:focus {
-    border-color: #3498db;
-    outline: none;
 }
 
 /* Botões */
@@ -184,39 +108,4 @@ button + button:hover {
 
 .btn:hover {
     background-color: #1a57d8;
-}
-
-/* Mensagem */
-#msg {
-    margin-top: 15px;
-    text-align: center;
-    font-weight: bold;
-    color: #e74c3c;
-}
-
-/* Tabela */
-table {
-    width: 100% !important;
-    border-collapse: collapse !important;
-    margin-top: 10px !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
-}
-
-table th, table td {
-    padding: 12px !important;
-    text-align: left !important;
-}
-
-table th {
-    background-color: #007bff !important;
-    color: white !important;
-    font-weight: bold !important;
-}
-
-table tr:nth-child(even) {
-    background-color: #f2f2f2 !important;
-}
-
-table tr:hover {
-    background-color: #e0f0ff !important;
 }
