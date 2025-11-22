@@ -16,6 +16,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const tbody = document.querySelector("#tabelaDestinos tbody");
     const inputEditId = document.getElementById("editId");
 
+    const modalExclusaoElement = document.getElementById("modalExclusao");
+    const modalExclusao = modalExclusaoElement ? new bootstrap.Modal(modalExclusaoElement) : null;
+    const btnConfirmarExclusao = document.getElementById("btnConfirmarExclusao");
+    let idParaExcluir = null;
+
     const inputNome = document.getElementById("nomeDestino");
     const inputLocalizacao = document.getElementById("localizacaoDestino");
     const inputObservacao = document.getElementById("observacaoDestino");
@@ -58,13 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tbody.addEventListener("click", function (e) {
         const target = e.target;
+        const btnExcluir = e.target.closest('.btn-excluir');
+
+        const id = btnExcluir.getAttribute("data-id");
 
         // EXCLUIR
         if (target.classList.contains("btn-excluir")) {
-            const id = target.getAttribute("data-id");
-            document.getElementById(`linha-${id}`).remove();
-            document.getElementById(`hidden-${id}`).remove();
-            renumerarIndices();
+            idParaExcluir = id;
+            modalExclusao.show();
         }
 
         // EDITAR
@@ -92,6 +98,26 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    if (btnConfirmarExclusao) {
+        btnConfirmarExclusao.addEventListener("click", function () {
+            if (idParaExcluir) {
+                removerDestino(idParaExcluir);
+                modalExclusao.hide();
+                idParaExcluir = null;
+            }
+        });
+    }
+
+    function removerDestino(id) {
+        const linha = document.getElementById(`linha-${id}`);
+        const hidden = document.getElementById(`hidden-${id}`);
+
+        if (linha) linha.remove();
+        if (hidden) hidden.remove();
+
+        renumerarIndices();
+    }
+
     function criarDestino(dados) {
         const uniqueId = Date.now();
         let index = tbody.rows.length;
@@ -101,8 +127,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <td class="td-nome">${dados.nome}</td>
                 <td class="td-localizacao">${dados.localizacao}</td>
                 <td>
-                    <input type="file" class="form-control form-control-sm" 
-                           name="destinos[${index}].arquivoDestino" accept="image/*">
+                   <span class="text-muted small fst-italic">Novo item (salve para enviar)</span>
+                   <input type="file" class="form-control form-control-sm mt-1" 
+                          accept="image/*">
                 </td>
                 <td>
                     <button type="button" class="btn btn-primary btn-sm btn-editar" data-id="${uniqueId}">Editar</button>
@@ -148,21 +175,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renumerarIndices() {
-        const gruposHidden = document.querySelectorAll(".hidden-group");
-        gruposHidden.forEach((grupo, index) => {
-            grupo.querySelector(".input-nome").name = `destinos[${index}].nome`;
-            grupo.querySelector(".input-localizacao").name = `destinos[${index}].localizacao`;
-
-            grupo.querySelector(".input-descricao").name = `destinos[${index}].descricao`;
-            grupo.querySelector(".input-observacao").name = `destinos[${index}].observacao`;
-        });
-
         const linhas = tbody.querySelectorAll("tr");
+
         linhas.forEach((tr, index) => {
+            const btnEditar = tr.querySelector(".btn-editar");
+            if (!btnEditar) return;
+
+            const idVinculo = btnEditar.getAttribute("data-id");
+            const hiddenGroup = document.getElementById(`hidden-${idVinculo}`);
+
+            if (hiddenGroup) {
+                setPropName(hiddenGroup, ".input-id", index, "id");
+                setPropName(hiddenGroup, ".input-nome", index, "nome");
+                setPropName(hiddenGroup, ".input-localizacao", index, "localizacao");
+                setPropName(hiddenGroup, ".input-descricao", index, "descricao");
+                setPropName(hiddenGroup, ".input-observacao", index, "observacao");
+            }
+
             const fileInput = tr.querySelector("input[type='file']");
-            if(fileInput) {
+            if (fileInput) {
                 fileInput.name = `destinos[${index}].arquivoDestino`;
             }
         });
+    }
+
+    function setPropName(container, selector, index, campo) {
+        const input = container.querySelector(selector);
+        if (input) {
+            input.name = `destinos[${index}].${campo}`;
+        }
     }
 });

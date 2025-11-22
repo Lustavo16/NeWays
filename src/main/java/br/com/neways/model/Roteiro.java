@@ -20,9 +20,9 @@ public class Roteiro {
 
     private String descricao;
 
-    @Lob
-    @Column(name = "capa", length = 10000000)
-    private byte[] capa;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "capa_id")
+    private Arquivo capa;
 
     @Transient
     private MultipartFile arquivoCapa;
@@ -34,8 +34,14 @@ public class Roteiro {
     @OneToMany(mappedBy = "roteiro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Destino> destinos = new ArrayList<>();
 
+    //region Getters e Setters
+    public String getCapaBase64() {
+        if (this.capa == null || this.capa.getDados() == null) {
+            return null;
+        }
+        return java.util.Base64.getEncoder().encodeToString(this.capa.getDados());
+    }
 
-    //Getters e Setters
     public Long getId() {
         return id;
     }
@@ -60,8 +66,6 @@ public class Roteiro {
         this.descricao = descricao;
     }
 
-    @ManyToOne
-    @JoinColumn(name="criador_id")
     public Usuario getCriador() {
         return criador;
     }
@@ -78,11 +82,11 @@ public class Roteiro {
         this.destinos = destinos;
     }
 
-    public byte[] getCapa() {
+    public Arquivo getCapa() {
         return capa;
     }
 
-    public void setCapa(byte[] capa) {
+    public void setCapa(Arquivo capa) {
         this.capa = capa;
     }
 
@@ -93,4 +97,6 @@ public class Roteiro {
     public void setArquivoCapa(MultipartFile arquivoCapa) {
         this.arquivoCapa = arquivoCapa;
     }
+
+    //endregion
 }

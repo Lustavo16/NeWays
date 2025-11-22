@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus Roteiros</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<!-- Menu -->
+<div th:replace="~{fragments/header :: nav}"></div>
+
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Meus Roteiros</h3>
+        <a th:href="@{/novoRoteiro}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Novo Roteiro
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="tabelaRoteiros">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Criador</th>
+                        <th class="text-center">Destinos</th>
+                        <th style="width: 200px;">Ações</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="roteiro : ${listaRoteiros}">
+                        <td th:text="${roteiro.nome}" class="fw-bold"></td>
+                        <td th:text="${roteiro.criador?.nomeDeUsuario}"></td>
+                        <td th:text="${roteiro.destinos?.size() ?: 0}" class="text-center"></td>
+                        <td>
+                            <a th:href="@{'/roteiro/editar/' + ${roteiro.id}}" class="btn btn-sm btn-outline-primary">
+                                Editar
+                            </a>
+
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-excluir"
+                                    th:data-id="${roteiro.id}">
+                                Excluir
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(listaRoteiros)}">
+                        <td colspan="4" class="text-center py-4 text-muted">
+                            Nenhum roteiro encontrado.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/modalExclusao :: modalExclusao}"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/roteiro.js}"></script>
+
+</body>
+</html>

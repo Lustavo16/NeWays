@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
+
 @Entity
 @Getter
 @Setter
@@ -21,9 +23,9 @@ public class Destino {
 
     private String observacao;
 
-    @Lob
-    @Column(length = 10000000)
-    private byte[] foto;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "foto_id")
+    private Arquivo foto;
 
     @Transient
     private MultipartFile arquivoDestino;
@@ -31,6 +33,14 @@ public class Destino {
     @ManyToOne
     @JoinColumn(name = "roteiro_id")
     private Roteiro roteiro;
+
+    //region Getters e Setters
+    public String getImagemBase64() {
+        if (this.foto == null || this.foto.getDados() == null) {
+            return null;
+        }
+        return Base64.getEncoder().encodeToString(this.foto.getDados());
+    }
 
     public Long getId() {
         return Id;
@@ -72,11 +82,11 @@ public class Destino {
         this.observacao = observacao;
     }
 
-    public byte[] getFoto() {
+    public Arquivo getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(Arquivo foto) {
         this.foto = foto;
     }
 
@@ -95,4 +105,6 @@ public class Destino {
     public void setArquivoDestino(MultipartFile arquivoDestino) {
         this.arquivoDestino = arquivoDestino;
     }
+
+    //endregion
 }

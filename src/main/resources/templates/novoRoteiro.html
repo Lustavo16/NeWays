@@ -9,11 +9,44 @@
 
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-
     <style>
         .note-editor {
             background-color: white;
+        }
+        .arquivo-atual {
+            background-color: #e9ecef;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            color: #495057;
+            border: 1px solid #ced4da;
+            border-bottom: none; /* Cola no input de baixo */
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tira a borda de cima do input para colar no box */
+        .input-com-arquivo-acima {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        /* Link de download discreto */
+        .btn-download-arquivo {
+            color: #2f73ff;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+        .btn-download-arquivo:hover {
+            color: #1a57d8;
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -33,14 +66,37 @@
             <form th:action="@{/roteiro/salvar}" method="post" th:object="${roteiro}" enctype="multipart/form-data">
 
                 <div class="row g-3 mb-3">
+                    <input hidden="hidden" id="idRoteiro" th:field="*{id}">
                     <div class="col-md-6">
                         <label for="nome" class="form-label fw-bold">Nome do Roteiro</label>
                         <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Ex: Viagem para Europa" required>
                     </div>
 
                     <div class="col-md-6">
-                        <label for="foto" class="form-label fw-bold">Imagem de Capa</label>
-                        <input type="file" th:field="*{arquivoCapa}" class="form-control" id="foto" accept="image/*">
+                        <label class="form-label fw-bold">Imagem de Capa</label>
+
+                        <div th:if="${roteiro.capa != null}" class="arquivo-atual">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            <strong class="me-1">Salvo:</strong>
+                            <span th:text="${roteiro.capa.nomeOriginal}" class="text-truncate" style="max-width: 150px;">imagem.jpg</span>
+
+                            <div class="ms-auto d-flex align-items-center gap-3">
+                                <!-- Botão de Download da Capa -->
+                                <a th:href="@{/roteiro/{id}/capa(id=${roteiro.id})}" class="btn-download-arquivo" title="Baixar arquivo original">
+                                    <i class="bi bi-download"></i> Baixar
+                                </a>
+                                <span class="badge bg-secondary">Mantido</span>
+                            </div>
+                        </div>
+
+                        <!-- 2. Input de arquivo -->
+                        <input type="file" th:field="*{arquivoCapa}" id="foto" accept="image/*"
+                               class="form-control"
+                               th:classappend="${roteiro.capa != null} ? 'input-com-arquivo-acima' : ''">
+
+                        <div class="form-text" th:if="${roteiro.capa != null}">
+                            Deixe vazio para manter a capa atual.
+                        </div>
                     </div>
                 </div>
 
@@ -70,7 +126,47 @@
                             <th style="width: 150px;">Ações</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tbodyDestinos">
+                            <tr th:each="destino, itemStat : *{destinos}" th:id="'linha-' + ${itemStat.index}">
+
+                                <td style="display:none;">
+                                    <div th:id="'hidden-' + ${itemStat.index}" class="hidden-group">
+                                        <input type="hidden" class="input-id" th:field="*{destinos[__${itemStat.index}__].id}">
+                                        <input type="hidden" class="input-nome" th:field="*{destinos[__${itemStat.index}__].nome}">
+
+                                        <input type="hidden" class="input-localizacao" th:field="*{destinos[__${itemStat.index}__].localizacao}">
+
+                                        <input type="hidden" class="input-descricao" th:field="*{destinos[__${itemStat.index}__].descricao}">
+                                        <input type="hidden" class="input-observacao" th:field="*{destinos[__${itemStat.index}__].observacao}">
+                                    </div>
+                                </td>
+
+                                <td class="td-nome" th:text="${destino.nome}">Nome do Local</td>
+                                <td class="td-localizacao" th:text="${destino.localizacao}">Localização</td>
+
+                                <td>
+                                    <div th:if="${destino.foto != null}" class="arquivo-atual py-1 mb-0 d-flex justify-content-between" style="font-size: 0.85rem;">
+                                        <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                            <i class="bi bi-image text-primary flex-shrink-0"></i>
+                                            <span th:text="${destino.foto.nomeOriginal}" class="text-truncate">foto.jpg</span>
+                                        </div>
+                                        <a th:href="@{/destino/{id}/foto(id=${destino.id})}" class="btn-download-arquivo ms-2 flex-shrink-0" title="Baixar">
+                                            <i class="bi bi-download"></i>
+                                        </a>
+                                    </div>
+
+                                    <input type="file" class="form-control form-control-sm"
+                                           th:field="*{destinos[__${itemStat.index}__].arquivoDestino}" accept="image/*"
+                                           th:classappend="${destino.foto != null} ? 'input-com-arquivo-acima' : ''">
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary btn-sm btn-editar"
+                                            th:attr="data-id=${itemStat.index}">Editar</button>
+
+                                    <button type="button" class="btn btn-danger btn-sm btn-excluir"
+                                            th:attr="data-id=${itemStat.index}">Excluir</button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -87,6 +183,7 @@
 </div>
 
 <div th:replace="~{fragments/modalDestino :: modalDestino}"></div>
+<div th:replace="~{fragments/modalExclusao :: modalExclusao}"></div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
