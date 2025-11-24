@@ -13,14 +13,29 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     box-sizing: border-box;
 }
 
-/* Fundo e fonte geral */
+/* Fundo de viagem e fonte geral */
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: #f4f6f9;
     color: #333;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+
+    /* Fundo de viagem */
+    background: url('/images/fundo_viagem.jpg') no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+/* Overlay leve para legibilidade do conteúdo */
+body::before {
+    content: '';
+    position: fixed; /* ocupa toda a tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.6); /* ajuste a opacidade conforme desejar */
+    z-index: -1; /* garante que fique atrás de todo o conteúdo */
 }
 
 html, body {

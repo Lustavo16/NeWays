@@ -1,18 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Novo Roteiro - Neways</title>
 
+    <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 
     <style>
+        /* Fundo com overlay global */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+            min-height: 100vh;
+            margin: 0;
+            background: url('/images/fundo_viagem.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.6);
+            z-index: -1;
+        }
+
+        /* Header ocultável */
+        nav.navbar {
+            background-color: #007bff !important;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            padding: 0.8rem 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-radius: 0 0 12px 12px;
+
+            /* Oculto por padrão */
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        nav.navbar.show {
+            transform: translateY(0);
+        }
+
+        /* Summernote */
         .note-editor {
             background-color: white;
         }
+
+        /* Arquivos */
         .arquivo-atual {
             background-color: #e9ecef;
             border-radius: 4px;
@@ -20,21 +63,17 @@
             font-size: 0.9rem;
             color: #495057;
             border: 1px solid #ced4da;
-            border-bottom: none; /* Cola no input de baixo */
+            border-bottom: none;
             border-bottom-left-radius: 0;
             border-bottom-right-radius: 0;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-
-        /* Tira a borda de cima do input para colar no box */
         .input-com-arquivo-acima {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
         }
-
-        /* Link de download discreto */
         .btn-download-arquivo {
             color: #2f73ff;
             text-decoration: none;
@@ -50,7 +89,9 @@
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
+
+<!-- Header via fragmento -->
 <div th:replace="~{fragments/header :: nav}"></div>
 
 <div class="container mt-4 mb-5">
@@ -66,7 +107,7 @@
             <form th:action="@{/roteiro/salvar}" method="post" th:object="${roteiro}" enctype="multipart/form-data">
 
                 <div class="row g-3 mb-3">
-                    <input hidden="hidden" id="idRoteiro" th:field="*{id}">
+                    <input hidden id="idRoteiro" th:field="*{id}">
                     <div class="col-md-6">
                         <label for="nome" class="form-label fw-bold">Nome do Roteiro</label>
                         <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Ex: Viagem para Europa" required>
@@ -74,26 +115,19 @@
 
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Imagem de Capa</label>
-
                         <div th:if="${roteiro.capa != null}" class="arquivo-atual">
                             <i class="bi bi-check-circle-fill text-success"></i>
                             <strong class="me-1">Salvo:</strong>
                             <span th:text="${roteiro.capa.nomeOriginal}" class="text-truncate" style="max-width: 150px;">imagem.jpg</span>
-
                             <div class="ms-auto d-flex align-items-center gap-3">
-                                <!-- Botão de Download da Capa -->
                                 <a th:href="@{/roteiro/{id}/capa(id=${roteiro.id})}" class="btn-download-arquivo" title="Baixar arquivo original">
                                     <i class="bi bi-download"></i> Baixar
                                 </a>
                                 <span class="badge bg-secondary">Mantido</span>
                             </div>
                         </div>
-
-                        <!-- 2. Input de arquivo -->
                         <input type="file" th:field="*{arquivoCapa}" id="foto" accept="image/*"
-                               class="form-control"
-                               th:classappend="${roteiro.capa != null} ? 'input-com-arquivo-acima' : ''">
-
+                               class="form-control" th:classappend="${roteiro.capa != null} ? 'input-com-arquivo-acima' : ''">
                         <div class="form-text" th:if="${roteiro.capa != null}">
                             Deixe vazio para manter a capa atual.
                         </div>
@@ -127,46 +161,39 @@
                         </tr>
                         </thead>
                         <tbody id="tbodyDestinos">
-                            <tr th:each="destino, itemStat : *{destinos}" th:id="'linha-' + ${itemStat.index}">
-
-                                <td style="display:none;">
-                                    <div th:id="'hidden-' + ${itemStat.index}" class="hidden-group">
-                                        <input type="hidden" class="input-id" th:field="*{destinos[__${itemStat.index}__].id}">
-                                        <input type="hidden" class="input-nome" th:field="*{destinos[__${itemStat.index}__].nome}">
-
-                                        <input type="hidden" class="input-localizacao" th:field="*{destinos[__${itemStat.index}__].localizacao}">
-
-                                        <input type="hidden" class="input-descricao" th:field="*{destinos[__${itemStat.index}__].descricao}">
-                                        <input type="hidden" class="input-observacao" th:field="*{destinos[__${itemStat.index}__].observacao}">
+                        <tr th:each="destino, itemStat : *{destinos}" th:id="'linha-' + ${itemStat.index}">
+                            <td style="display:none;">
+                                <div th:id="'hidden-' + ${itemStat.index}" class="hidden-group">
+                                    <input type="hidden" class="input-id" th:field="*{destinos[__${itemStat.index}__].id}">
+                                    <input type="hidden" class="input-nome" th:field="*{destinos[__${itemStat.index}__].nome}">
+                                    <input type="hidden" class="input-localizacao" th:field="*{destinos[__${itemStat.index}__].localizacao}">
+                                    <input type="hidden" class="input-descricao" th:field="*{destinos[__${itemStat.index}__].descricao}">
+                                    <input type="hidden" class="input-observacao" th:field="*{destinos[__${itemStat.index}__].observacao}">
+                                </div>
+                            </td>
+                            <td class="td-nome" th:text="${destino.nome}">Nome do Local</td>
+                            <td class="td-localizacao" th:text="${destino.localizacao}">Localização</td>
+                            <td>
+                                <div th:if="${destino.foto != null}" class="arquivo-atual py-1 mb-0 d-flex justify-content-between" style="font-size: 0.85rem;">
+                                    <div class="d-flex align-items-center gap-2 overflow-hidden">
+                                        <i class="bi bi-image text-primary flex-shrink-0"></i>
+                                        <span th:text="${destino.foto.nomeOriginal}" class="text-truncate">foto.jpg</span>
                                     </div>
-                                </td>
-
-                                <td class="td-nome" th:text="${destino.nome}">Nome do Local</td>
-                                <td class="td-localizacao" th:text="${destino.localizacao}">Localização</td>
-
-                                <td>
-                                    <div th:if="${destino.foto != null}" class="arquivo-atual py-1 mb-0 d-flex justify-content-between" style="font-size: 0.85rem;">
-                                        <div class="d-flex align-items-center gap-2 overflow-hidden">
-                                            <i class="bi bi-image text-primary flex-shrink-0"></i>
-                                            <span th:text="${destino.foto.nomeOriginal}" class="text-truncate">foto.jpg</span>
-                                        </div>
-                                        <a th:href="@{/destino/{id}/foto(id=${destino.id})}" class="btn-download-arquivo ms-2 flex-shrink-0" title="Baixar">
-                                            <i class="bi bi-download"></i>
-                                        </a>
-                                    </div>
-
-                                    <input type="file" class="form-control form-control-sm"
-                                           th:field="*{destinos[__${itemStat.index}__].arquivoDestino}" accept="image/*"
-                                           th:classappend="${destino.foto != null} ? 'input-com-arquivo-acima' : ''">
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-primary btn-sm btn-editar"
-                                            th:attr="data-id=${itemStat.index}">Editar</button>
-
-                                    <button type="button" class="btn btn-danger btn-sm btn-excluir"
-                                            th:attr="data-id=${itemStat.index}">Excluir</button>
-                                </td>
-                            </tr>
+                                    <a th:href="@{/destino/{id}/foto(id=${destino.id})}" class="btn-download-arquivo ms-2 flex-shrink-0" title="Baixar">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                </div>
+                                <input type="file" class="form-control form-control-sm"
+                                       th:field="*{destinos[__${itemStat.index}__].arquivoDestino}" accept="image/*"
+                                       th:classappend="${destino.foto != null} ? 'input-com-arquivo-acima' : ''">
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm btn-editar"
+                                        th:attr="data-id=${itemStat.index}">Editar</button>
+                                <button type="button" class="btn btn-danger btn-sm btn-excluir"
+                                        th:attr="data-id=${itemStat.index}">Excluir</button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -182,15 +209,14 @@
     </div>
 </div>
 
+<!-- Modais -->
 <div th:replace="~{fragments/modalDestino :: modalDestino}"></div>
 <div th:replace="~{fragments/modalExclusao :: modalExclusao}"></div>
 
+<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
-
 <script th:src="@{/js/destinos.js}"></script>
 
 <script>
@@ -210,9 +236,27 @@
             ],
             lang: 'pt-BR'
         };
-
         $('#descricao').summernote(summernoteConfig);
         $('#descricaoDestino').summernote(summernoteConfig);
+
+        // Header ocultável
+        const navbar = document.querySelector('nav.navbar');
+        let lastScroll = window.scrollY;
+
+        document.addEventListener('mousemove', e => {
+            if (e.clientY < 50) navbar.classList.add('show');
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScroll) {
+                navbar.classList.remove('show');
+            } else if (window.scrollY < lastScroll) {
+                navbar.classList.add('show');
+            }
+            lastScroll = window.scrollY;
+        });
+
+        navbar.classList.add('show'); // Inicialmente visível
     });
 </script>
 

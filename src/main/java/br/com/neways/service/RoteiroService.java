@@ -33,4 +33,8 @@ public class RoteiroService {
     public void ExcluirRoteiro(Roteiro roteiro){
         roteiroRepository.delete(roteiro);
     }
+
+    public List<Roteiro> buscarTodos() {
+        return roteiroRepository.findAll();
+    }
 }

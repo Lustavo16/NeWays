@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${roteiro.nome} + ' - Detalhes'">Detalhes do Roteiro</title>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/feed-card.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .roteiro-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fefefe;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .roteiro-capa {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+       }
+       .roteiro-capa:hover {
+            transform: scale(1.03);
+       }
+
+        .roteiro-info {
+            text-align: center;
+            margin-bottom: 50px;
+       }
+
+        .roteiro-info h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+       }
+
+       .roteiro-info p {
+            font-size: 1.05rem;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+       }
+
+       .roteiro-info .text-muted {
+            font-size: 0.9rem;
+            color: #999;
+       }
+
+        .destinos-section h3 {
+            margin-bottom: 25px;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        /* Cards horizontais */
+        .destino-card {
+            display: flex;
+            flex-direction: row;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .destino-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .destino-card img {
+            width: 40%;
+            object-fit: cover;
+        }
+
+        .destino-card-body {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .destino-card-body h5 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+            color: #222;
+        }
+
+        .destino-card-body p {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .destino-card-body p.observacao {
+            font-style: italic;
+            color: #777;
+        }
+
+        /* Botões */
+        .destino-buttons {
+            margin-top: 15px;
+        }
+
+        .destino-buttons button {
+            margin-right: 10px;
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .destino-buttons .btn-reservar {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .destino-buttons .btn-reservar:hover {
+            background-color: #0056b3;
+        }
+
+        .destino-buttons .btn-salvar {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .destino-buttons .btn-salvar:hover {
+            background-color: #495057;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .destino-card {
+                flex-direction: column;
+            }
+            .destino-card img {
+                width: 100%;
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/header :: nav}"></div>
+
+<div class="roteiro-container">
+
+    <!-- Capa do roteiro -->
+    <img class="roteiro-capa" th:if="${roteiro.capa != null}"
+         th:src="'data:image/jpeg;base64,' + ${roteiro.capaBase64}" alt="Capa do roteiro">
+
+    <!-- Informações do roteiro -->
+    <div class="roteiro-info">
+        <h1 th:text="${roteiro.nome}"></h1>
+        <p th:utext="${roteiro.descricao != null ? roteiro.descricao.replaceAll('^<p>|</p>$','') : ''}"></p>
+        <p class="text-muted">Criado por: <span th:text="${roteiro.criador.nomeDeUsuario}"></span></p>
+    </div>
+
+    <!-- Destinos -->
+    <div class="destinos-section">
+        <h3>Destinos</h3>
+        <div th:each="d : ${roteiro.destinos}" class="destino-card">
+
+            <img th:if="${d.foto != null}" th:src="'data:image/jpeg;base64,' + ${d.imagemBase64}" alt="Destino">
+
+            <div class="destino-card-body">
+                <div>
+                    <h5 th:text="${d.nome}"></h5>
+                    <p th:text="${d.localizacao}"></p>
+                    <p th:text="${d.descricao != null ? d.descricao.replaceAll('^<p>|</p>$','') : ''}"></p>
+                    <p class="observacao" th:text="${d.observacao != null ? d.observacao.replaceAll('^<p>|</p>$','') : ''}"></p>
+                </div>
+                <div class="destino-buttons">
+                    <button class="btn-reservar">Reservar</button>
+                    <button class="btn-salvar">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<div th:replace="~{fragments/modalExclusao :: modalExclusao}"></div>
+</body>
+</html>

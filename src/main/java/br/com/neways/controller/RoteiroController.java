@@ -78,7 +78,7 @@ public class RoteiroController {
 
         roteiroService.Salvar(roteiro);
 
-        return "menu";
+        return "redirect:/menu";
     }
 
     @GetMapping("/meusRoteiros")
@@ -126,4 +126,28 @@ public class RoteiroController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + arquivo.getNomeOriginal() + "\"")
                 .body(arquivo.getDados());
     }
+
+    @GetMapping("/menu")
+    public String exibirMenu(Model model) {
+
+        List<Roteiro> listaRoteiros = roteiroService.buscarTodos();
+
+        model.addAttribute("roteiros", listaRoteiros);
+
+        return "menu"; // a sua tela onde estão os cards
+    }
+
+    @GetMapping("/{id}")
+    public String detalhesRoteiro(@PathVariable Long id, Model model) {
+
+        Roteiro roteiro = roteiroService.BuscarPorId(id);
+
+        if (roteiro == null) {
+            return "redirect:/menu"; // Se não achar, volta para o menu
+        }
+
+        model.addAttribute("roteiro", roteiro);
+        return "detalhesRoteiro"; // nome do HTML da página de detalhes
+    }
+
 }

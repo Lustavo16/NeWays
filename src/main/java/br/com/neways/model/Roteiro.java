@@ -3,6 +3,7 @@ package br.com.neways.model;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,10 +37,14 @@ public class Roteiro {
 
     //region Getters e Setters
     public String getCapaBase64() {
-        if (this.capa == null || this.capa.getDados() == null) {
+        try {
+            if (this.capa == null || this.capa.getDados() == null) {
+                return null;
+            }
+            return Base64.getEncoder().encodeToString(this.capa.getDados());
+        } catch (Exception e) {
             return null;
         }
-        return java.util.Base64.getEncoder().encodeToString(this.capa.getDados());
     }
 
     public Long getId() {

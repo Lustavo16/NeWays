@@ -5,32 +5,290 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neways - Home</title>
 
+    <!-- Bootstrap -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Seus CSS -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/feed-card.css}">
+
+    <!-- Ícones Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        /* Fundo com overlay */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+            min-height: 100vh;
+            margin: 0;
+            background: url('/images/fundo_viagem.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.6);
+            z-index: -1;
+        }
+
+        /* Header ocultável */
+        nav.navbar {
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            background-color: #007bff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-radius: 0 0 12px 12px;
+
+            /* Oculto por padrão */
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+        nav.navbar.show {
+            transform: translateY(0);
+        }
+
+        nav.navbar .navbar-brand {
+            font-size: 1.6rem;
+            color: #fff !important;
+        }
+        nav.navbar .navbar-brand i {
+            margin-right: 6px;
+        }
+        nav.navbar .nav-link {
+            color: #f8f9fa !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        nav.navbar .nav-link:hover {
+            color: #ffd700 !important;
+        }
+        nav.navbar .btn-light,
+        nav.navbar .btn-outline-light,
+        nav.navbar .btn-danger {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 5px 12px;
+            transition: all 0.3s ease;
+        }
+        nav.navbar .btn-light:hover {
+            background-color: #e2e6ea;
+            color: #007bff;
+        }
+        nav.navbar .btn-outline-light:hover {
+            background-color: #fff;
+            color: #007bff;
+            border-color: #007bff;
+        }
+        nav.navbar .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        /* Seção de boas-vindas compacta */
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+            text-align: center;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .welcome-section h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .welcome-section p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .welcome-section .btn {
+            padding: 10px 24px;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .welcome-section .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .welcome-section .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .welcome-section .btn-outline-primary {
+            border-color: #007bff;
+            color: #007bff;
+        }
+        .welcome-section .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Post cards */
+        .post-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .post-card img.post-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .post-title {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #222;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+        .post-title:hover {
+            text-decoration: underline;
+        }
+        .post-description {
+            color: #555;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        .post-actions {
+            text-align: right;
+        }
+        .btn-like {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+        .btn-like.liked i {
+            color: #c0392b;
+        }
+
+        @media (max-width: 768px) {
+            .post-card img.post-image {
+                height: 200px;
+            }
+            .welcome-section {
+                padding: 30px 15px;
+                max-width: 90%;
+            }
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+            .welcome-section p {
+                font-size: 1rem;
+            }
+            .welcome-section .btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
+<!-- Header via fragmento -->
 <div th:replace="~{fragments/header :: nav}"></div>
 
 <div class="container mt-5">
-    <div class="white-box text-center">
-        <h1 class="mb-4">Bem-vindo ao NeWays</h1>
 
-        <p class="text-muted mb-5">Abrindo o caminho para aqueles que virão.</p>
+    <!-- Seção de boas-vindas -->
+    <div class="welcome-section">
+        <h1>Bem-vindo ao NeWays</h1>
+        <p>Abrindo o caminho para aqueles que virão.</p>
+        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+            <a th:href="@{/novoRoteiro}" class="btn btn-primary btn-lg">Cadastrar Novo Roteiro</a>
+            <a th:href="@{/roteiro}" class="btn btn-outline-primary btn-lg">Buscar Roteiros</a>
+        </div>
+    </div>
 
-        <div class="d-grid gap-3 d-sm-flex justify-content-center">
-            <a th:href="@{/novoRoteiro}" class="btn btn-primary btn-lg px-4 gap-3">
-                Cadastrar Novo Roteiro
-            </a>
-            <a th:href="@{/roteiro}" class="btn btn-outline-primary btn-lg px-4">
-                Buscar Roteiros
-            </a>
+    <!-- FEED -->
+    <div th:each="r : ${roteiros}" class="post-card">
+
+        <div class="post-header mb-2">
+            <span class="username" th:text="${r.criador != null ? r.criador.nomeDeUsuario : 'Autor desconhecido'}"></span>
         </div>
 
+        <a th:href="@{'/roteiro/' + ${r.id}}">
+            <img class="post-image" th:if="${r.capaBase64 != null}"
+                 th:src="'data:image/jpeg;base64,' + ${r.capaBase64}" alt="Capa do roteiro">
+        </a>
+
+        <div class="post-body">
+            <a class="post-title" th:href="@{'/roteiro/' + ${r.id}}" th:text="${r.nome}"></a>
+            <p class="post-description"
+               th:text="${#strings.abbreviate(#strings.replace(r.descricao, '<p>', '').replace('</p>', ''), 140)}"></p>
+
+            <div class="post-actions">
+                <button class="btn-like"><i class="bi bi-heart"></i></button>
+            </div>
+        </div>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 <div th:replace="~{fragments/modalExclusao :: modalExclusao}"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+
+        // Ativar botão like
+        document.querySelectorAll(".btn-like").forEach(btn => {
+            btn.addEventListener("click", function(event) {
+                event.stopPropagation();
+                event.preventDefault();
+                this.classList.toggle("liked");
+                const icon = this.querySelector("i");
+                if (this.classList.contains("liked")) {
+                    icon.classList.replace("bi-heart", "bi-heart-fill");
+                } else {
+                    icon.classList.replace("bi-heart-fill", "bi-heart");
+                }
+            });
+        });
+
+        // Header ocultável
+        const navbar = document.querySelector('nav.navbar');
+        let lastScroll = window.scrollY;
+
+        document.addEventListener('mousemove', e => {
+            if (e.clientY < 50) navbar.classList.add('show');
+        });
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > lastScroll) {
+                navbar.classList.remove('show');
+            } else if (window.scrollY < lastScroll) {
+                navbar.classList.add('show');
+            }
+            lastScroll = window.scrollY;
+        });
+
+        // Inicialmente exibir o header
+        navbar.classList.add('show');
+    });
+</script>
+
 </body>
 </html>
