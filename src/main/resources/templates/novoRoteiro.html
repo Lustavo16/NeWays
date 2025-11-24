@@ -104,7 +104,7 @@
     <div class="card shadow-sm border-0">
         <div class="card-body p-4">
 
-            <form th:action="@{/roteiro/salvar}" method="post" th:object="${roteiro}" enctype="multipart/form-data">
+            <form th:action="@{/roteiro/salvar}" method="post" th:object="${roteiro}" enctype="multipart/form-data" id="formRoteiro">
 
                 <div class="row g-3 mb-3">
                     <input hidden id="idRoteiro" th:field="*{id}">
@@ -120,9 +120,6 @@
                             <strong class="me-1">Salvo:</strong>
                             <span th:text="${roteiro.capa.nomeOriginal}" class="text-truncate" style="max-width: 150px;">imagem.jpg</span>
                             <div class="ms-auto d-flex align-items-center gap-3">
-                                <a th:href="@{/roteiro/{id}/capa(id=${roteiro.id})}" class="btn-download-arquivo" title="Baixar arquivo original">
-                                    <i class="bi bi-download"></i> Baixar
-                                </a>
                                 <span class="badge bg-secondary">Mantido</span>
                             </div>
                         </div>
@@ -179,9 +176,6 @@
                                         <i class="bi bi-image text-primary flex-shrink-0"></i>
                                         <span th:text="${destino.foto.nomeOriginal}" class="text-truncate">foto.jpg</span>
                                     </div>
-                                    <a th:href="@{/destino/{id}/foto(id=${destino.id})}" class="btn-download-arquivo ms-2 flex-shrink-0" title="Baixar">
-                                        <i class="bi bi-download"></i>
-                                    </a>
                                 </div>
                                 <input type="file" class="form-control form-control-sm"
                                        th:field="*{destinos[__${itemStat.index}__].arquivoDestino}" accept="image/*"
@@ -196,6 +190,10 @@
                         </tr>
                         </tbody>
                     </table>
+                    <div id="alertaDestinos" class="alert alert-danger d-none" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        Por favor, adicione pelo menos um destino ao roteiro antes de salvar.
+                    </div>
                 </div>
 
                 <div class="d-grid gap-2 mt-4">

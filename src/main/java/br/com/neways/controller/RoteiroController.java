@@ -134,7 +134,7 @@ public class RoteiroController {
 
         model.addAttribute("roteiros", listaRoteiros);
 
-        return "menu"; // a sua tela onde estão os cards
+        return "menu";
     }
 
     @GetMapping("/{id}")
@@ -143,11 +143,11 @@ public class RoteiroController {
         Roteiro roteiro = roteiroService.BuscarPorId(id);
 
         if (roteiro == null) {
-            return "redirect:/menu"; // Se não achar, volta para o menu
+            return "redirect:/menu";
         }
 
         model.addAttribute("roteiro", roteiro);
-        return "detalhesRoteiro"; // nome do HTML da página de detalhes
+        return "detalhesRoteiro";
     }
 
 }

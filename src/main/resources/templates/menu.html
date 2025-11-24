@@ -36,6 +36,17 @@
             z-index: -1;
         }
 
+        .input-busca{
+            border-radius: 8px;
+            margin-right: 8px;
+            border-color:lightgray;
+            font-size: small;
+            height: 100%;
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 103%;
+        }
+
         /* Header ocultável */
         nav.navbar {
             position: sticky;
@@ -101,7 +112,8 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.1);
             margin-bottom: 50px;
             text-align: center;
-            max-width: 700px;
+            width: 100%;
+            max-width: 800px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -146,10 +158,13 @@
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             padding: 20px;
             margin-bottom: 25px;
+            padding-left: 50px;
+            padding-right: 50px;
+            max-width: 700px;
         }
         .post-card img.post-image {
             width: 100%;
-            height: 300px;
+            height: 400px;
             object-fit: cover;
             border-radius: 12px;
             margin-bottom: 15px;
@@ -207,19 +222,22 @@
 </head>
 <body>
 
-<!-- Header via fragmento -->
 <div th:replace="~{fragments/header :: nav}"></div>
 
 <div class="container mt-5">
 
-    <!-- Seção de boas-vindas -->
     <div class="welcome-section">
         <h1>Bem-vindo ao NeWays</h1>
         <p>Abrindo o caminho para aqueles que virão.</p>
-        <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
-            <a th:href="@{/novoRoteiro}" class="btn btn-primary btn-lg">Cadastrar Novo Roteiro</a>
-            <a th:href="@{/roteiro}" class="btn btn-outline-primary btn-lg">Buscar Roteiros</a>
-        </div>
+        <form th:action="@{/buscar}" th:method="GET">
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3">
+                <div>
+                    <input class="input-busca" type="text" id="parametro" name="parametro" placeholder="Busque um criador ou roteiro">
+                </div>
+                <!--a th:href="@{/novoRoteiro}" class="btn btn-primary btn-lg">Cadastrar Novo Roteiro</a-->
+                <button type="submit" class="btn btn-outline-primary btn-lg">Buscar Roteiros</button>
+            </div>
+        </form>
     </div>
 
     <!-- FEED -->
@@ -237,7 +255,7 @@
         <div class="post-body">
             <a class="post-title" th:href="@{'/roteiro/' + ${r.id}}" th:text="${r.nome}"></a>
             <p class="post-description"
-               th:text="${#strings.abbreviate(#strings.replace(r.descricao, '<p>', '').replace('</p>', ''), 140)}"></p>
+               th:utext="${#strings.abbreviate(#strings.replace(r.descricao, '<p>', '').replace('</p>', ''), 140)}"></p>
 
             <div class="post-actions">
                 <button class="btn-like"><i class="bi bi-heart"></i></button>

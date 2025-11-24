@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Neways</title>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
             background-color: #f0f2f5;
@@ -52,7 +54,7 @@
 
             <div class="mb-3">
                 <label for="cpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="cpf" th:field="*{cpf}" placeholder="000.000.000-00" required>
+                <input type="text" class="form-control cpf" id="cpf" th:field="*{cpf}" placeholder="000.000.000-00" required>
             </div>
 
             <div class="row">
@@ -80,5 +82,12 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+<script>
+    $(document).ready(function(){
+        $(".cpf").mask('000.000.000-00');
+    })
+</script>
 </body>
 </html>

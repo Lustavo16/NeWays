@@ -37,4 +37,8 @@ public class RoteiroService {
     public List<Roteiro> buscarTodos() {
         return roteiroRepository.findAll();
     }
+
+    public List<Roteiro> Buscar(String parametro) {
+        return roteiroRepository.consultaGeral(parametro);
+    }
 }

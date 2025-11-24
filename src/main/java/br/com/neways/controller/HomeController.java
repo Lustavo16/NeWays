@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -26,11 +27,20 @@ public class HomeController {
         // Busca TODOS os roteiros cadastrados
         List<Roteiro> roteiros = roteiroService.buscarTodos();
 
-        // Envia para o HTML
         model.addAttribute("roteiros", roteiros);
-        model.addAttribute("mensagem", "Bem-Vindo ao Neways");
+        model.addAttribute("mensagem", "Bem-Vindo ao NeWays");
 
-        return "menu"; // sua home
+        return "menu";
+    }
+
+    @GetMapping("/buscar")
+    public String Buscar(Model model, @RequestParam String parametro){
+        List<Roteiro> listaRoteiros = roteiroService.Buscar(parametro);
+
+        model.addAttribute("roteiros", listaRoteiros);
+        model.addAttribute("mensagem", "Bem-Vindo ao NeWays");
+
+        return "menu";
     }
 
     @GetMapping("/novoRoteiro")

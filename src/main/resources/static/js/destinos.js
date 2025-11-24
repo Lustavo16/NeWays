@@ -7,6 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    const formRoteiro = document.getElementById("formRoteiro");
+    const alertaDestinos = document.getElementById("alertaDestinos");
+
     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
     const modalTitle = document.querySelector(".modal-title");
 
@@ -63,12 +66,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     tbody.addEventListener("click", function (e) {
         const target = e.target;
-        const btnExcluir = e.target.closest('.btn-excluir');
-
-        const id = btnExcluir.getAttribute("data-id");
 
         // EXCLUIR
         if (target.classList.contains("btn-excluir")) {
+            const btnExcluir = e.target.closest('.btn-excluir');
+            const id = btnExcluir.getAttribute("data-id");
+
             idParaExcluir = id;
             modalExclusao.show();
         }
@@ -121,6 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function criarDestino(dados) {
         const uniqueId = Date.now();
         let index = tbody.rows.length;
+
+        if (alertaDestinos) {
+            alertaDestinos.classList.add("d-none");
+        }
 
         let linha = `
             <tr id="linha-${uniqueId}">
@@ -204,5 +211,27 @@ document.addEventListener("DOMContentLoaded", () => {
         if (input) {
             input.name = `destinos[${index}].${campo}`;
         }
+    }
+
+    if (formRoteiro) {
+        formRoteiro.addEventListener("submit", function(e) {
+            const qtdDestinos = document.querySelectorAll("#tabelaDestinos tbody tr").length;
+
+            if (qtdDestinos === 0) {
+                e.preventDefault();
+
+                if (alertaDestinos) {
+                    alertaDestinos.classList.remove("d-none");
+
+                    alertaDestinos.scrollIntoView({ behavior: "smooth", block: "center" });
+                } else {
+                    alert("Adicione pelo menos um destino!");
+                }
+            } else {
+                if (alertaDestinos) {
+                    alertaDestinos.classList.add("d-none");
+                }
+            }
+        });
     }
 });
